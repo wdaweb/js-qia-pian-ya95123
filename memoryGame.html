@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記憶撲克</title>
+    <style>
+        #game {
+            width: 60%;
+            /* height: 700px; */
+            background: rgb(190, 250, 255);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .card {
+            width: 100px;
+            height: 180px;
+            margin: 10px;
+            float: left;
+            /* 設定子元素在3D空間內(要記得設定為點，子元素absolute) */
+            transform-style: preserve-3d;
+            /* 先把圖片翻到背面 */
+            transform: rotateY(180deg);
+            /* 設為定位點 */
+            position: relative;
+            /* 改變時的秒數=>(指定(transform變動),秒數) */
+            transition: transform 0.3s;
+        }
+
+        /* 先不用放卡片 */
+        .front {
+            width: 100%;
+            height: 100%;
+            /* background: #ffffaa; */
+            /* border: 1px solid #000; */
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+
+        }
+
+        /* 要先放卡片 */
+        .back {
+            width: 100%;
+            height: 100%;
+            /* 用background-image 會比 單寫background還好唷 */
+            background-image: url(./images/Red_back.jpg);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            /* border: 1px solid #000; */
+            position: absolute;
+            /* 設定為背面 */
+            transform: rotateY(180deg);
+            /* 為了讓淡出時不會再回到沒數字那面淡出 */
+            backface-visibility: hidden;
+        }
+
+        .open {
+            /* 把卡片打開(轉正面) */
+            transform: rotateY(0deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game">
+        <div id="frame"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script>
+        $(function () {
+            // 生出16組卡片html
+            for (let i = 1; i <= 16; i++) {
+                $("#game").append(`<div class="card">
+                <div class="front"></div>
+                <div class="back"></div>
+                </div>
+                `);
+            }
+
+            // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
+            // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
+            for (let i = 0; i < ($(".card").length); i++) {
+                // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
+                let num = i % ($(".card").length / 2) + 1;
+                $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
+                // 放入資料標籤，以利檢查測試 data- 預設可以存資料
+                $(".card").eq(i).attr("data-card", num);
+
+                // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
+                let targat = Math.floor(Math.random() * $(".card").length);
+                // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
+                $(".card").eq(targat).insertAfter($(".card").eq(i));
+            }
+
+            // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
+            $(".card").on('click', function () {
+                // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
+                if ($(".open").length < 2 && !$(this).hasClass("open")) {
+                    $(this).addClass("open");
+                }
+                // 已經打開兩張卡片的時候
+                if ($(".open").length == 2) {
+                    // 讓圖片翻翻回(不相等救回直接翻回)
+                    setTimeout(() => {
+                        $(".open").removeClass("open");
+                    }, 300);
+
+                    // 圖片一樣時(open.eq(0)跟open.eq(1)一樣) (有bug)
+                    if ($(".open").eq(0).find("front").css("background-image") == $(".open").eq(1).find("front").css("background-image")) {
+                        // 一樣的話加入ok class，並讓它透明
+                        $(".open").addClass(".ok").fadeTo(300, 0);
+                    }
+
+                }
+            })
+
+        })
+    </script>
+</body>
+
+</html>

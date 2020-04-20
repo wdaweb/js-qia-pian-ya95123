@@ -4,11 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>快樂的訓練記憶時間</title>
+    <title>Happy memory time</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            /* font-size: 0px; */
+        }
+
+        #game {
+            width: 75vw;
+            height: 80vh;
+            background: rgb(19, 95, 0);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .card {
+            width: 14vw;
+            height: 15vh;
+            margin: 1vh 0 0 1vw;
+            float: left;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateY(180deg);
+            transition: transform .3s;
+        }
+
+        .front {
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+
+        }
+
+        .back {
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url(/images/Red_back.jpg);
+            position: absolute;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+        }
+    </style>
 </head>
 
 <body>
+    <div id="game"></div>
 
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script>
+        $(function () {
+            // 產生的卡片數量
+            for (let i = 1; i <= 20; i++) {
+                $("#game").append(`
+                <div class="card">
+                    <div class="front"></div>
+                    <div class="back"></div>
+                </div>
+                `)
+            }
+
+            // for ()
+        })
+    </script>
 </body>
 
 </html>
