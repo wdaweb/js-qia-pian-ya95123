@@ -6,10 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>記憶撲克</title>
   <style>
+    * {
+      /* font-family: "Microsoft Yahei"; */
+      font-family: "微軟正黑體";
+
+    }
+
     #game {
       width: 60vw;
       height: 80vh;
       background: rgb(190, 250, 255);
+
       position: absolute;
       left: 50%;
       top: 50%;
@@ -19,7 +26,7 @@
     .card {
       width: 10%;
       height: 20%;
-      margin: 10px;
+      margin: 1.251%;
       float: left;
       /* 設定子元素在3D空間內(要記得設定為點，子元素absolute) */
       transform-style: preserve-3d;
@@ -77,6 +84,26 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script>
     $(function () {
+      // 跳歡迎畫面，選擇牌數
+      const { value: cate } = Swal.fire({
+        title: 'WOW，好想你！😀',
+        text: '歡迎來到，簡單動腦時間 ~ \n大朋友小朋友，還是老朋友，讓我們來提升記憶吧！',
+        input: 'select',
+        inputOptions: {
+          eight: '8',
+          sixteen: '16',
+          twentysix: '26',
+          thirtyfour: '34',
+          fourtytwo: '42',
+          fiftytwo: '52'
+        },
+        inputPlaceholder: '選一個想玩的總牌數',
+        showCancelButton: false,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+
+      })
+
       // 生出16組卡片html
       for (let i = 1; i <= 26; i++) {
         $("#game").append(`<div class="card">
