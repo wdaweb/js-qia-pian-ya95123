@@ -84,7 +84,6 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
   <script>
     $(function () {
-      // 跳歡迎畫面，選擇牌數
       const { value: cate } = Swal.fire({
         title: 'WOW，好想你！😀',
         text: '歡迎來到，簡單動腦時間 ~ \n大朋友小朋友，還是老朋友，讓我們來提升記憶吧！',
@@ -102,7 +101,8 @@
         allowOutsideClick: false,
         allowEscapeKey: false
       })
-      console.log({ value: cate });
+      console.log(result.value);
+      // 跳歡迎畫面，選擇牌數
 
 
       // 生出16組卡片html
