@@ -7,14 +7,82 @@
   <title>記憶撲克</title>
   <style>
     * {
-      /* font-family: "Microsoft Yahei"; */
+      margin: 0;
+      padding: 0;
+      list-style: none;
       font-family: "微軟正黑體";
+    }
 
+    html,
+    body {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* 對話框 */
+    .talk {
+      width: 60vmin;
+      height: 35vmin;
+      background: #fff;
+      border-radius: 2%;
+      box-shadow: 0px 0px 2vmin #aaa;
+      text-align: center;
+
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      position: relative;
+      transition: 0.3s;
+    }
+
+    .content {
+      width: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .confirm {
+      width: 20%;
+      padding: 1.5% 0;
+      border: 0px;
+      border-radius: 0.3rem;
+      background: rgb(72, 72, 255);
+      box-shadow: 0vmin 0vmin 0.8vmin #ccc;
+
+      font-size: 2.5vmin;
+      font-weight: 550;
+      color: white;
+      cursor: pointer;
+    }
+
+    .tTitle {
+      font-size: 4vmin;
+      font-weight: 550;
+      margin-bottom: 1.5vmin;
+    }
+
+    .tText {
+      font-size: 2.4vmin;
+    }
+
+    .invisible {
+      display: none;
+    }
+
+    /* ---- */
+
+    #sNum {
+      margin: 2.5vmin;
+      font-size: 2.2vmin;
     }
 
     #game {
-      width: 60vw;
-      height: 80vh;
+      width: 60%;
+      height: 80%;
       background: rgb(190, 250, 255);
 
       position: absolute;
@@ -76,93 +144,131 @@
 </head>
 
 <body>
+  <div id="welcome" class="talk">
+    <div class="content">
+      <p class="tTitle">記憶 Up Up Up ✨</p>
+      <span class="tText">歡迎來到，簡單動腦時間 ~<br>大朋友小朋友，還是老朋友，讓我們來提升記憶吧！</span><br>
+      <select id="sNum">
+        <option value="">選一個想玩的總牌數</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="26">26</option>
+        <option value="34">34</option>
+        <option value="42">42</option>
+        <option value="52">52</option>
+      </select><br>
+      <input id="sOK" class="confirm" type="button" value="OK">
+    </div>
+  </div>
+
+  <!-- TODO 遊戲方式+輸入玩家名字 -->
+  <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
+
   <div id="game">
     <div id="frame"></div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> -->
   <script>
     $(function () {
-      const { value: cate } = Swal.fire({
-        title: 'WOW，好想你！😀',
-        text: '歡迎來到，簡單動腦時間 ~ \n大朋友小朋友，還是老朋友，讓我們來提升記憶吧！',
-        input: 'select',
-        inputOptions: {
-          eight: '8',
-          sixteen: '16',
-          twentysix: '26',
-          thirtyfour: '34',
-          fourtytwo: '42',
-          fiftytwo: '52'
-        },
-        inputPlaceholder: '選一個想玩的總牌數',
-        showCancelButton: false,
-        allowOutsideClick: false,
-        allowEscapeKey: false
-      })
-      console.log(result.value);
-      // 跳歡迎畫面，選擇牌數
+      // 點選 OK 鍵，抓取 select 值 ，對話框消失
+      $("#sOK").click(function () {
+        console.log(parseInt($("#sNum").val()));
+        $("#welcome").addClass("invisible");
 
+        if ($("#sNum").val() == "") {
+          alert("要選擇卡牌數，才能進行遊戲唷 😎");
+          $("#welcome").removeClass("invisible");
+        }
 
-      // 生出16組卡片html
-      for (let i = 1; i <= 26; i++) {
-        $("#game").append(`<div class="card">
+        // const sNum = parseInt($("#sNum").val());
+        // console.log(sNum);
+
+        // 生出該場總卡片數的 card
+        for (let i = 1; i <= parseInt($("#sNum").val()); i++) {
+          $("#game").append(`<div class="card">
                 <div class="front"></div>
                 <div class="back"></div>
                 </div>
                 `);
-      }
-
-      // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
-      // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
-      for (let i = 0; i < ($(".card").length); i++) {
-        // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
-        let num = i % ($(".card").length / 2) + 1;
-        $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
-        // 放入資料標籤，以利檢查測試 data- 預設可以存資料
-        $(".card").eq(i).attr("data-card", num);
-
-        // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
-        let targat = Math.floor(Math.random() * $(".card").length);
-        // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
-        $(".card").eq(targat).insertAfter($(".card").eq(i));
-      }
-
-      // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
-      $(".card").on('click', function () {
-        // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
-        if ($(".open").length < 2 && !$(this).hasClass("open")) {
-          $(this).addClass("open");
         }
-        // 已經打開兩張卡片的時候
-        if ($(".open").length == 2) {
-          // 讓圖片翻翻回(不相等救回直接翻回)
-          setTimeout(() => {
-            $(".open").removeClass("open");
-          }, 300);
 
-          // 圖片一樣時(open.eq(0)跟open.eq(1)一樣) (有bug)
-          if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
-            // 一樣的話加入ok class，並讓它透明
-            $(".open").fadeTo(300, 0).addClass("ok");
+        // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
+        // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
+        for (let i = 0; i < ($(".card").length); i++) {
+          // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
+          let num = i % ($(".card").length / 2) + 1;
+          $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
+          // 放入資料標籤，以利檢查測試 data- 預設可以存資料
+          $(".card").eq(i).attr("data-card", num);
+
+          // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
+          let targat = Math.floor(Math.random() * $(".card").length);
+          // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
+          $(".card").eq(targat).insertAfter($(".card").eq(i));
+        }
+
+        // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
+        $(".card").on('click', function () {
+          // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
+          if ($(".open").length < 2 && !$(this).hasClass("open")) {
+            $(this).addClass("open");
           }
-        }
-        // 全部完成時
-        if ($(".ok").length == $(".card").length) {
-          setTimeout(() => {
-            Swal.fire({
-              icon: 'success',
-              title: '恭喜',
-              text: '恭喜過關'
+          // 已經打開兩張卡片的時候
+          if ($(".open").length == 2) {
+            // 讓圖片翻翻回(不相等救回直接翻回)
+            setTimeout(() => {
+              $(".open").removeClass("open");
             }, 300);
-          })
-        }
+
+            // 圖片一樣時(open.eq(0)跟open.eq(1)一樣) (有bug)
+            if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
+              // 一樣的話加入ok class，並讓它透明
+              $(".open").fadeTo(300, 0).addClass("ok");
+            }
+          }
+        })
+
+
+
+
+
+        // 全部完成時
+        // if ($(".ok").length == $(".card").length) {
+        //   setTimeout(() => {
+        //     Swal.fire({
+        //       icon: 'success',
+        //       title: '恭喜',
+        //       text: '恭喜過關'
+        //     }, 300);
+        //   })
+        // }
 
 
       })
 
     })
+
+    // 外部套件 SweetAlert 但我目前不會抓他的值，就先不用，之後問老師
+    // const result = Swal.fire({
+    //     title: 'WOW，好想你！😀',
+    //     text: '歡迎來到，簡單動腦時間 ~ \n大朋友小朋友，還是老朋友，讓我們來提升記憶吧！',
+    //     input: 'select',
+    //     inputOptions: {
+    //       eight: '8',
+    //       sixteen: '16',
+    //       twentysix: '26',
+    //       thirtyfour: '34',
+    //       fourtytwo: '42',
+    //       fiftytwo: '52'
+    //     },
+    //     inputPlaceholder: '選一個想玩的總牌數',
+    //     showCancelButton: false,
+    //     allowOutsideClick: false,
+    //     allowEscapeKey: false
+    //   })
+    //   console.log(result.inputOptions);
   </script>
 </body>
 
