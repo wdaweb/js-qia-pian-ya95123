@@ -37,6 +37,7 @@
       transition: 0.3s;
     }
 
+    /* 內容置中 */
     .content {
       width: 100%;
       position: absolute;
@@ -45,6 +46,7 @@
       transform: translate(-50%, -50%);
     }
 
+    /* 確認鍵 */
     .confirm {
       width: 20%;
       padding: 1.5% 0;
@@ -59,16 +61,19 @@
       cursor: pointer;
     }
 
+    /* 標題設定 */
     .tTitle {
       font-size: 4vmin;
       font-weight: 550;
       margin-bottom: 1.5vmin;
     }
 
+    /* 內文設定 */
     .tText {
       font-size: 2.4vmin;
     }
 
+    /* 消失 */
     .invisible {
       display: none;
     }
@@ -136,8 +141,8 @@
       backface-visibility: hidden;
     }
 
+    /* 把卡片打開(轉正面) */
     .open {
-      /* 把卡片打開(轉正面) */
       transform: rotateY(0deg);
     }
   </style>
@@ -182,11 +187,12 @@
           $("#welcome").removeClass("invisible");
         }
 
-        // const sNum = parseInt($("#sNum").val());
-        // console.log(sNum);
+        // sNum等於被選到的值
+        const sNum = parseInt($("#sNum").val());
+        console.log(sNum);
 
         // 生出該場總卡片數的 card
-        for (let i = 1; i <= parseInt($("#sNum").val()); i++) {
+        for (let i = 1; i <= sNum; i++) {
           $("#game").append(`<div class="card">
                 <div class="front"></div>
                 <div class="back"></div>
@@ -194,20 +200,41 @@
                 `);
         }
 
+        // 用if區分 26張以下 和 26張-52張之間
         // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
         // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
-        for (let i = 0; i < ($(".card").length); i++) {
-          // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
-          let num = i % ($(".card").length / 2) + 1;
-          $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
-          // 放入資料標籤，以利檢查測試 data- 預設可以存資料
-          $(".card").eq(i).attr("data-card", num);
+        if (sNum <= 26 && sNum > 0) {
+          for (let i = 0; i < ($(".card").length); i++) {
+            // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
+            let num = i % ($(".card").length / 2) + 1;
+            $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
+            // 放入資料標籤，以利檢查測試 data- 預設可以存資料
+            $(".card").eq(i).attr("data-card", num);
 
-          // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
-          let targat = Math.floor(Math.random() * $(".card").length);
-          // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
-          $(".card").eq(targat).insertAfter($(".card").eq(i));
+            // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
+            let targat = Math.floor(Math.random() * $(".card").length);
+            // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
+            $(".card").eq(targat).insertAfter($(".card").eq(i));
+          }
         }
+
+        else if (sNum <= 52 && sNum > 26) {
+          for (let i = 0; i < 26; i++) {
+            let num1 = i % (26 / 2) + 1;
+            $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num1}S.jpg)`);
+            $(".card").eq(i).attr("data-card", `${num1}S`);
+          }
+          for (let j = 0; j < (sNum - 26); j++) {
+            let num2 = j % ((sNum - 26) / 2) + 1;
+            $(".card").eq(j + 26).find(".front").css("background-image", `url(./images/num/${num2}H.jpg)`);
+            $(".card").eq(j + 26).attr("data-card", `${num2}H`);
+          }
+          for (let k = 0; k < sNum; k++) {
+            let targat = Math.floor(Math.random() * sNum);
+            $(".card").eq(targat).insertAfter($(".card").eq(k));
+          }
+        }
+
 
         // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
         $(".card").on('click', function () {
@@ -217,12 +244,12 @@
           }
           // 已經打開兩張卡片的時候
           if ($(".open").length == 2) {
-            // 讓圖片翻翻回(不相等救回直接翻回)
+            // 讓圖片翻翻回(不相等就回直接翻回)
             setTimeout(() => {
               $(".open").removeClass("open");
             }, 300);
 
-            // 圖片一樣時(open.eq(0)跟open.eq(1)一樣) (有bug)
+            // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
             if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
               // 一樣的話加入ok class，並讓它透明
               $(".open").fadeTo(300, 0).addClass("ok");
