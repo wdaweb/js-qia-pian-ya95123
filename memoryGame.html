@@ -15,7 +15,7 @@
 
     html,
     body {
-      width: 100vw;
+      /* width: 100vw; */
       height: 100vh;
     }
 
@@ -87,19 +87,24 @@
 
     #game {
       width: 60%;
-      height: 80%;
+      /* height: auto; */
       background: rgb(190, 250, 255);
 
       position: absolute;
       left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      top: 10%;
+      transform: translate(-50%, 0%);
+      margin-bottom: 10%;
+
+      /* display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around; */
     }
 
     .card {
       width: 10%;
-      height: 20%;
-      margin: 1.251%;
+      height: 15vmin;
+      margin: 1.25%;
       float: left;
       /* 設定子元素在3D空間內(要記得設定為點，子元素absolute) */
       transform-style: preserve-3d;
