@@ -19,7 +19,7 @@
       height: 100vh;
     }
 
-    /* 對話框 */
+    /* --對話框 class 設定-- */
     .talk {
       width: 60vmin;
       height: 35vmin;
@@ -78,13 +78,18 @@
       display: none;
     }
 
-    /* ---- */
-
+    /* 對話框1 select 卡牌數 */
     #sNum {
       margin: 2.5vmin;
       font-size: 2.2vmin;
     }
 
+    /* 對話框2 預設消失 */
+    #players {
+      display: none;
+    }
+
+    /* --卡片設置-- */
     #game {
       width: 60%;
       /* height: auto; */
@@ -154,6 +159,7 @@
 </head>
 
 <body>
+  <!-- 1.歡迎對話框 -->
   <div id="welcome" class="talk">
     <div class="content">
       <p class="tTitle">記憶 Up Up Up ✨</p>
@@ -167,9 +173,12 @@
         <option value="42">42</option>
         <option value="52">52</option>
       </select><br>
-      <input id="sOK" class="confirm" type="button" value="OK">
+      <input id="welOK" class="confirm" type="button" value="OK">
     </div>
   </div>
+
+  <!-- 2.遊戲方式及人數對話框 -->
+  <div id="players" class="talk"></div>
 
   <!-- TODO 1.遊戲方式+輸入玩家名字 2.玩家記分板 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩) -->
   <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
@@ -182,17 +191,27 @@
   <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> -->
   <script>
     $(function () {
-      // 點選 OK 鍵，抓取 select 值 ，對話框消失
-      $("#sOK").click(function () {
-        console.log(parseInt($("#sNum").val()));
-        $("#welcome").addClass("invisible");
-
+      // 點選 OK 鍵，抓取 select 值，對話框消失，並跳下一對話框(玩家人數與名稱)
+      $("#welOK").click(function () {
+        // --對話框 1 設定--
         if ($("#sNum").val() == "") {
           alert("要選擇卡牌數，才能進行遊戲唷 😎");
           $("#welcome").removeClass("invisible");
         }
+        else {
+          $("#welcome").css("display", "none");
+          // $("#welcome").addClass("invisible");
+          $("#players").css("display", "block");
+        }
 
-        // sNum等於被選到的值
+        // --對話框 2 設定--
+
+
+
+
+        //  TODO 觸發事件在最後一次的開場對話框OK後，再產生
+        // --製造卡牌--
+        // sNum等於被選到的值 sNum 
         const sNum = parseInt($("#sNum").val());
         console.log(sNum);
 
