@@ -52,7 +52,7 @@
       padding: 1.5% 0;
       border: 0px;
       border-radius: 0.3rem;
-      background: rgb(72, 72, 255);
+      background: rgb(82, 85, 252);
       box-shadow: 0vmin 0vmin 0.8vmin #ccc;
 
       font-size: 2.5vmin;
@@ -178,7 +178,22 @@
   </div>
 
   <!-- 2.遊戲方式及人數對話框 -->
-  <div id="players" class="talk"></div>
+  <div id="players" class="talk">
+    <div class="content">
+      <p class="tTitle">記憶 Up Up Up ✨</p>
+      <span class="tText">歡迎來到，簡單動腦時間 ~<br>大朋友小朋友，還是老朋友，讓我們來提升記憶吧！</span><br>
+      <select id="sNum">
+        <option value="">選一個想玩的總牌數</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="26">26</option>
+        <option value="34">34</option>
+        <option value="42">42</option>
+        <option value="52">52</option>
+      </select><br>
+      <input id="welOK" class="confirm" type="button" value="OK">
+    </div>
+  </div>
 
   <!-- TODO 1.遊戲方式+輸入玩家名字 2.玩家記分板 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩) -->
   <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
@@ -196,7 +211,6 @@
         // --對話框 1 設定--
         if ($("#sNum").val() == "") {
           alert("要選擇卡牌數，才能進行遊戲唷 😎");
-          $("#welcome").removeClass("invisible");
         }
         else {
           $("#welcome").css("display", "none");
