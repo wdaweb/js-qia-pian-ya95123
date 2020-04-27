@@ -73,6 +73,11 @@
       font-size: 2.4vmin;
     }
 
+    /* 備註 */
+    .remark {
+      color: #999;
+    }
+
     /* 消失 */
     .invisible {
       display: none;
@@ -84,9 +89,14 @@
       font-size: 2.2vmin;
     }
 
+    #welcome {
+      display: none;
+
+    }
+
     /* 對話框2 預設消失 */
     #players {
-      display: none;
+      /* display: none; */
     }
 
     /* --卡片設置-- */
@@ -180,22 +190,23 @@
   <!-- 2.遊戲方式及人數對話框 -->
   <div id="players" class="talk">
     <div class="content">
-      <p class="tTitle">🃏遊戲規則🃏</p>
-      <span class="tText">歡迎來到，簡單動腦時間 ~<br>大朋友小朋友，還是老朋友，讓我們來提升記憶吧！</span><br>
+      <p class="tTitle">🃏 遊戲規則 🃏</p>
+      <span class="tText">選擇一對相同的數字和圖像的卡片，即獲得一分!<br>且可繼續翻下一對卡片。答錯則換下一位玩家 😎</span><br>
+      <span class="remark">(一個人玩也是OK的哦)</span><br>
       <select id="sNum">
-        <option value="">選一個想玩的總牌數</option>
-        <option value="8">8</option>
-        <option value="16">16</option>
-        <option value="26">26</option>
-        <option value="34">34</option>
-        <option value="42">42</option>
-        <option value="52">52</option>
+        <option value="">玩家人數</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
       </select><br>
-      <input id="welOK" class="confirm" type="button" value="OK">
+      <input id="startGO" class="confirm" type="button" value="GO" style="background:rgb(241, 58, 58)">
     </div>
   </div>
 
-  <!-- TODO 1.遊戲方式+輸入玩家名字 2.玩家記分板 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩) -->
+  <!-- TODO 1.遊戲方式+輸入玩家名字 2.玩家記分板 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵(?) -->
   <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
 
   <div id="game">
