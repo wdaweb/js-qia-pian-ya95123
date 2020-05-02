@@ -100,20 +100,21 @@
       width: 35%;
       margin-left: 1%;
       margin-top: 1%;
-      border: 1px solid #999;
+      border: 0.1vmin solid #999;
       font-size: 2.4vmin;
     }
 
     /* 記分板 */
     #scoreBoard {
-      width: 12%;
+      width: 14%;
       /* height: 10%; */
       border: 0.2vmin solid #000;
       border-radius: 1vmin;
       position: absolute;
       left: 2%;
-      top: 4%;
+      top: 6.5%;
 
+      font-size: 2.7vmin;
       text-align: center;
       transition: 0.3s;
     }
@@ -126,13 +127,13 @@
     #game {
       width: 60%;
       /* height: auto; */
-      background: rgb(190, 250, 255);
+      /* background: rgb(190, 250, 255); */
 
       position: absolute;
       left: 50%;
-      top: 10%;
+      top: 5%;
       transform: translate(-50%, 0%);
-      margin-bottom: 10%;
+      /* margin-bottom: 3%; */
 
       /* display: flex;
       flex-wrap: wrap;
@@ -232,22 +233,21 @@
   </div>
 
   <!-- 3.記分板 -->
-  <table id="scoreBoard" cellspacing="0">
+  <table id="scoreBoard" class="invisible" cellspacing="0">
     <tr>
       <td>Name</td>
       <td>Score</td>
     </tr>
   </table>
 
-  <!-- TODO 1.GO設定 2.卡片發牌設定 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 4.增加動態互動感 -->
+  <!-- TODO  1.卡片發牌設定 2.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 3.增加動態互動感 -->
   <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
 
-  <div id="game">
+  <div id="game" class="invisible">
     <div id="frame"></div>
   </div>
 
   <script src="./jquery-3.5.0.min.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> -->
   <script>
     $(function () {
       // --對話框 1 OK設定--
@@ -258,9 +258,77 @@
         }
         else {
           $("#welcome1").addClass("invisible");
-          // $("#welcome").addClass("invisible");
           $("#welcome2").removeClass("invisible");
+
+          // --製造卡牌--
+          // sNum 等於在 select裡被選到的值  
+          const sNum = parseInt($("#sNum").val());
+          console.log(`選擇：${sNum} 牌`);
+          // 生出該場總卡片數的 card
+          for (let i = 1; i <= sNum; i++) {
+            $("#game").append(`<div class="card">
+                <div class="front"></div>
+                <div class="back"></div>
+                </div>
+                `);
+          }
+          // 用if區分 26張以下 和 26張-52張之間
+          // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
+          // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
+          if (sNum <= 26 && sNum > 0) {
+            for (let i = 0; i < ($(".card").length); i++) {
+              // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
+              let num = i % ($(".card").length / 2) + 1;
+              $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
+              // 放入資料標籤，以利檢查測試 data- 預設可以存資料
+              $(".card").eq(i).attr("data-card", num);
+
+              // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
+              let targat = Math.floor(Math.random() * $(".card").length);
+              // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
+              $(".card").eq(targat).insertAfter($(".card").eq(i));
+            }
+          }
+          else if (sNum <= 52 && sNum > 26) {
+            for (let i = 0; i < 26; i++) {
+              let num1 = i % (26 / 2) + 1;
+              $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num1}S.jpg)`);
+              $(".card").eq(i).attr("data-card", `${num1}S`);
+            }
+            for (let j = 0; j < (sNum - 26); j++) {
+              let num2 = j % ((sNum - 26) / 2) + 1;
+              $(".card").eq(j + 26).find(".front").css("background-image", `url(./images/num/${num2}H.jpg)`);
+              $(".card").eq(j + 26).attr("data-card", `${num2}H`);
+            }
+            for (let k = 0; k < sNum; k++) {
+              let targat = Math.floor(Math.random() * sNum);
+              $(".card").eq(targat).insertAfter($(".card").eq(k));
+            }
+          }
+          // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
+          $(".card").on('click', function () {
+            // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
+            if ($(".open").length < 2 && !$(this).hasClass("open")) {
+              $(this).addClass("open");
+            }
+            // 已經打開兩張卡片的時候
+            if ($(".open").length == 2) {
+              // 讓圖片翻翻回(不相等就回直接翻回)
+              setTimeout(() => {
+                $(".open").removeClass("open");
+              }, 300);
+
+              // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
+              if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
+                // 一樣的話加入ok class，並讓它透明
+                $(".open").fadeTo(300, 0).addClass("ok");
+              }
+            }
+          })
+
+
         }
+
       })
 
       // --對話框 2 players Next設定--
@@ -304,91 +372,40 @@
               </tr>
               `);
             console.log(`玩家 ${i + 1}：${$(".playersName").eq(i).val()}`);
-            // 讓對話框消失
             if (i == ($("#sPlayers").val()) - 1) {
+              // 讓對話框消失
               $("#welcome2").addClass("invisible");
+              // 計分欄出現
+              $("#scoreBoard").removeClass("invisible");
+              // 卡片出現
+              $("#game").removeClass("invisible");
+
             }
           }
         }
 
       })
 
+      // // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
+      // $(".card").on('click', function () {
+      //   // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
+      //   if ($(".open").length < 2 && !$(this).hasClass("open")) {
+      //     $(this).addClass("open");
+      //   }
+      //   // 已經打開兩張卡片的時候
+      //   if ($(".open").length == 2) {
+      //     // 讓圖片翻翻回(不相等就回直接翻回)
+      //     setTimeout(() => {
+      //       $(".open").removeClass("open");
+      //     }, 300);
 
-      // --對話框 2 GO設定(沒選或是沒填名字不能開始)--
-
-      //  TODO 觸發事件在最後一次的開場對話框OK後，再產生
-      // --製造卡牌--
-      // sNum 等於在 select裡被選到的值  
-      const sNum = parseInt($("#sNum").val());
-      console.log(sNum);
-
-      // 生出該場總卡片數的 card
-      for (let i = 1; i <= sNum; i++) {
-        $("#game").append(`<div class="card">
-                <div class="front"></div>
-                <div class="back"></div>
-                </div>
-                `);
-      }
-
-      // 用if區分 26張以下 和 26張-52張之間
-      // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
-      // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
-      if (sNum <= 26 && sNum > 0) {
-        for (let i = 0; i < ($(".card").length); i++) {
-          // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
-          let num = i % ($(".card").length / 2) + 1;
-          $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
-          // 放入資料標籤，以利檢查測試 data- 預設可以存資料
-          $(".card").eq(i).attr("data-card", num);
-
-          // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
-          let targat = Math.floor(Math.random() * $(".card").length);
-          // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
-          $(".card").eq(targat).insertAfter($(".card").eq(i));
-        }
-      }
-      else if (sNum <= 52 && sNum > 26) {
-        for (let i = 0; i < 26; i++) {
-          let num1 = i % (26 / 2) + 1;
-          $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num1}S.jpg)`);
-          $(".card").eq(i).attr("data-card", `${num1}S`);
-        }
-        for (let j = 0; j < (sNum - 26); j++) {
-          let num2 = j % ((sNum - 26) / 2) + 1;
-          $(".card").eq(j + 26).find(".front").css("background-image", `url(./images/num/${num2}H.jpg)`);
-          $(".card").eq(j + 26).attr("data-card", `${num2}H`);
-        }
-        for (let k = 0; k < sNum; k++) {
-          let targat = Math.floor(Math.random() * sNum);
-          $(".card").eq(targat).insertAfter($(".card").eq(k));
-        }
-      }
-
-
-
-
-      // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
-      $(".card").on('click', function () {
-        // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
-        if ($(".open").length < 2 && !$(this).hasClass("open")) {
-          $(this).addClass("open");
-        }
-        // 已經打開兩張卡片的時候
-        if ($(".open").length == 2) {
-          // 讓圖片翻翻回(不相等就回直接翻回)
-          setTimeout(() => {
-            $(".open").removeClass("open");
-          }, 300);
-
-          // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
-          if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
-            // 一樣的話加入ok class，並讓它透明
-            $(".open").fadeTo(300, 0).addClass("ok");
-          }
-        }
-      })
-
+      //     // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
+      //     if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
+      //       // 一樣的話加入ok class，並讓它透明
+      //       $(".open").fadeTo(300, 0).addClass("ok");
+      //     }
+      //   }
+      // })
 
     })
 
