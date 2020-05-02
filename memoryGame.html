@@ -235,7 +235,7 @@
     </tr>
   </table>
 
-  <!-- TODO 1.遊戲方式+輸入玩家名字 2.玩家記分板 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵(?) 4.增加動態互動感 -->
+  <!-- TODO 1.GO設定 2.卡片發牌設定 3.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 4.增加動態互動感 -->
   <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
 
   <div id="game">
@@ -276,29 +276,36 @@
           for (let i = 0; i < $("#sPlayers").val(); i++) {
             // 玩家輸入名稱 input
             $("#welcome2 .tText").append(`<input class="playersName" style="font-size: 2.4vmin;" type="text" size="20" placeholder="玩家${i + 1} 名稱">`);
-            console.log(i);
           }
-
-          // TODO 超爆奇怪 這裡playersName都會多印
-          console.log($("#sPlayers").val());
-          console.log($(".playersName").length);
-
+          console.log(`選擇：${$("#sPlayers").val()} 人`);
         }
 
       })
 
       // --對話框 2 players Go設定--
       $("#go").click(function () {
-        $("#welcome2").fadeOut(1000);
-        // 表格裡先放好玩家資訊
-        for (let j = 0; j < $("#sPlayers").val(); j++) {
-          $("#scoreBoard").append(`
+        // 都有輸入名字才可以往下進行
+        for (let i = 0; i < $("#sPlayers").val(); i++) {
+          if ($(".playersName").eq(i).val() == '') {
+            alert(`每個玩家都需要輸入名字才可以玩哦🙆‍♂`);
+            // 如果前面有被輸入到append，要清除掉
+            $(".pName").remove();
+            $(".pScore").remove();
+            break;
+          }
+          else {
+            $("#scoreBoard").append(`
               <tr>
-              <td class="pName">${$(".playersName").eq(j).val()}</td>
+              <td class="pName">${$(".playersName").eq(i).val()}</td>
               <td class="pScore">0</td>
               </tr>
               `);
-          console.log($(".playersName").eq(j).val());
+            console.log(`玩家 ${i + 1}：${$(".playersName").eq(i).val()}`);
+            if (i == ($("#sPlayers").val()) - 1) {
+              // $("#welcome2").fadeOut(300);
+              $("#welcome2").addClass("invisible");
+            }
+          }
         }
 
       })
