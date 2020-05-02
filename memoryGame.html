@@ -9,8 +9,8 @@
     * {
       margin: 0;
       padding: 0;
-      list-style: none;
-      font-family: "微軟正黑體";
+      /* list-style: none; */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, '微軟正黑體';
     }
 
     html,
@@ -24,8 +24,8 @@
       width: 60vmin;
       height: 35vmin;
       background: #fff;
-      border-radius: 2%;
-      box-shadow: 0px 0px 2vmin #aaa;
+      border-radius: 1vmin;
+      box-shadow: 0 0 2vmin #aaa;
       text-align: center;
 
       position: absolute;
@@ -51,11 +51,11 @@
       width: 20%;
       padding: 1.5% 0;
       border: 0px;
-      border-radius: 0.3rem;
+      border-radius: 1vmin;
       background: rgb(82, 85, 252);
       box-shadow: 0vmin 0vmin 0.8vmin #ccc;
 
-      font-size: 2.5vmin;
+      font-size: 2.7vmin;
       font-weight: 550;
       color: white;
       cursor: pointer;
@@ -90,32 +90,36 @@
       display: none;
     }
 
-    /* 對話框 預設消失 */
-    #welcome1 {
-      display: none;
+    /* input 邊框圓化 */
+    .input {
+      border-radius: 1vmin;
     }
 
-    #welcome2 {
-      /* display: none; */
-    }
-
+    /* 輸入名稱 input框 */
     .playersName {
       width: 35%;
       margin-left: 1%;
       margin-top: 1%;
       border: 1px solid #999;
+      font-size: 2.4vmin;
     }
 
     /* 記分板 */
     #scoreBoard {
-      width: 10%;
-      height: 10%;
-      /* border: 1px solid #000; */
+      width: 12%;
+      /* height: 10%; */
+      border: 0.2vmin solid #000;
+      border-radius: 1vmin;
       position: absolute;
       left: 2%;
       top: 4%;
 
       text-align: center;
+      transition: 0.3s;
+    }
+
+    #scoreBoard td {
+      padding: 1vmin;
     }
 
     /* --卡片設置-- */
@@ -193,7 +197,7 @@
     <div class="content">
       <p class="tTitle">記憶 Up Up Up ✨</p>
       <span class="tText">歡迎來到，簡單動腦時間 ~<br>大朋友小朋友，還是老朋友，讓我們來提升記憶吧！</span><br>
-      <select id="sNum" class="select">
+      <select id="sNum" class="select input">
         <option value="">選一個想玩的總牌數</option>
         <option value="8">8</option>
         <option value="16">16</option>
@@ -207,12 +211,12 @@
   </div>
 
   <!-- 2.遊戲方式及人數對話框 -->
-  <div id="welcome2" class="talk">
+  <div id="welcome2" class="talk invisible">
     <div class="content">
       <p class="tTitle">🃏 遊戲規則 🃏</p>
       <span class="tText">選擇一對相同的數字和圖像的卡片，即獲得一分!<br>且可繼續翻下一對卡片。答錯則換下一位玩家 😎</span><br>
       <span class="remark">(一個人玩也是OK的哦)</span><br id="remarkBr">
-      <select id="sPlayers" class="select">
+      <select id="sPlayers" class="select input">
         <option value="">玩家人數</option>
         <option value="1">1</option>
         <option value="2">2</option>
@@ -228,7 +232,7 @@
   </div>
 
   <!-- 3.記分板 -->
-  <table id="scoreBoard" border="1" cellspacing="0">
+  <table id="scoreBoard" cellspacing="0">
     <tr>
       <td>Name</td>
       <td>Score</td>
@@ -246,8 +250,6 @@
   <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> -->
   <script>
     $(function () {
-      // $("#welcome").removeClass("invisible");
-
       // --對話框 1 OK設定--
       // 點選 OK 鍵，抓取 select 值，對話框消失，並跳下一對話框(玩家人數與名稱)
       $("#welOK").click(function () {
@@ -255,9 +257,9 @@
           alert("要選擇卡牌數，才能進行遊戲唷 😎");
         }
         else {
-          $("#welcome1").css("display", "none");
+          $("#welcome1").addClass("invisible");
           // $("#welcome").addClass("invisible");
-          $("#welcome2").css("display", "block");
+          $("#welcome2").removeClass("invisible");
         }
       })
 
@@ -275,7 +277,7 @@
 
           for (let i = 0; i < $("#sPlayers").val(); i++) {
             // 玩家輸入名稱 input
-            $("#welcome2 .tText").append(`<input class="playersName" style="font-size: 2.4vmin;" type="text" size="20" placeholder="玩家${i + 1} 名稱">`);
+            $("#welcome2 .tText").append(`<input class="playersName input" type="text" size="20" placeholder="玩家${i + 1} 名稱">`);
           }
           console.log(`選擇：${$("#sPlayers").val()} 人`);
         }
@@ -294,6 +296,7 @@
             break;
           }
           else {
+            // 把玩家名稱放入計分欄
             $("#scoreBoard").append(`
               <tr>
               <td class="pName">${$(".playersName").eq(i).val()}</td>
@@ -301,8 +304,8 @@
               </tr>
               `);
             console.log(`玩家 ${i + 1}：${$(".playersName").eq(i).val()}`);
+            // 讓對話框消失
             if (i == ($("#sPlayers").val()) - 1) {
-              // $("#welcome2").fadeOut(300);
               $("#welcome2").addClass("invisible");
             }
           }
