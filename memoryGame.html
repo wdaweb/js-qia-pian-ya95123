@@ -253,7 +253,7 @@
     </tr>
   </table>
 
-  <!-- TODO  1.卡片發牌設定 2.遊戲完成時對話框(再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 3.增加動態互動感 -->
+  <!-- TODO  1.卡片發牌設定 2.遊戲完成時對話框(獲勝/平手/再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 3.增加動態互動感 -->
   <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
 
   <div id="game" class="invisible">
@@ -320,27 +320,55 @@
               $(".card").eq(targat).insertAfter($(".card").eq(k));
             }
           }
-          // // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
-          // $(".card").on('click', function () {
-          //   // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
-          //   if ($(".open").length < 2 && !$(this).hasClass("open")) {
-          //     $(this).addClass("open");
-          //   }
-          //   // 已經打開兩張卡片的時候
-          //   if ($(".open").length == 2) {
-          //     // 讓圖片翻翻回(不相等就回直接翻回)
-          //     setTimeout(() => {
-          //       $(".open").removeClass("open");
-          //     }, 300);
 
-          //     // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
-          //     if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
-          //       // 一樣的話加入ok class，並讓它透明
-          //       $(".open").fadeTo(300, 0).addClass("ok")
+          // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
+          $(".card").on('click', function () {
+            // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
+            if ($(".open").length < 2 && !$(this).hasClass("open")) {
+              $(this).addClass("open");
+            }
+            // 已經打開兩張卡片的時候
+            if ($(".open").length == 2) {
+              // 讓圖片翻翻回(不相等就回直接翻回)
+              setTimeout(() => {
+                $(".open").removeClass("open");
+              }, 300);
 
-          //     }
-          //   }
-          // })
+              // 換一位玩家玩(刪掉上一玩家class 加入到下一個玩家)
+              if ($(".open").eq(0).find(".front").css("background-image") !== $(".open").eq(1).find(".front").css("background-image")) {
+                for (i = 0; i < $(".pScore").length; i++) {
+                  if ($(".pScore").eq(i).hasClass("red") && i < ($(".pScore").length - 1)) {
+                    $(".pName").eq(i).removeClass("blue");
+                    $(".pScore").eq(i).removeClass("red");
+                    $(".pName").eq(i + 1).addClass("blue");
+                    $(".pScore").eq(i + 1).addClass("red");
+                    break;
+                    console.log($(".pScore").eq(i + 1).hasClass("red"));
+                  }
+                  // 最後一位玩家，跳到第一個玩家
+                  else if ($(".pScore").eq(i).hasClass("red") && i == ($(".pScore").length - 1)) {
+                    $(".pName").eq(i).removeClass("blue");
+                    $(".pScore").eq(i).removeClass("red");
+                    $(".pName").eq(0).addClass("blue");
+                    $(".pScore").eq(0).addClass("red");
+                  }
+                }
+              }
+              // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
+              else if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
+                // 一樣的話加入ok class，並讓它透明
+                $(".open").fadeTo(300, 0).addClass("ok");
+                // 答對該玩家加分
+                for (j = 0; j < $(".pScore").length; j++) {
+                  if ($(".pScore").eq(j).hasClass("red")) {
+                    ps[j]++;
+                    $(".pScore").eq(j).text(ps[j]);
+                  }
+                }
+
+              }
+            }
+          })
 
 
         }
@@ -401,41 +429,12 @@
               $("#game").fadeIn(1000);
             }
 
-            // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
-            $(".card").on('click', function () {
-              // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
-              if ($(".open").length < 2 && !$(this).hasClass("open")) {
-                $(this).addClass("open");
-              }
-              // 已經打開兩張卡片的時候
-              if ($(".open").length == 2) {
-                // 讓圖片翻翻回(不相等就回直接翻回)
-                setTimeout(() => {
-                  $(".open").removeClass("open");
-                }, 300);
-
-                // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
-                if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
-                  // 一樣的話加入ok class，並讓它透明
-                  $(".open").fadeTo(300, 0).addClass("ok");
-                  // 答對該玩家加分
-                  for (j = 0; j < $(".pScore").length; j++) {
-                    if ($(".pScore").eq(j).hasClass("red")) {
-                      ps[j]++;
-                      $(".pScore").eq(j).text(ps[j]);
-                    }
-                  }
-                  console.log($(".pScore").eq(0).text());
-
-                }
-              }
-            })
-
 
           }
         }
 
       })
+
 
 
 
