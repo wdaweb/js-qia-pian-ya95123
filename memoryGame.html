@@ -262,7 +262,7 @@
 
   <script src="./jquery-3.5.0.min.js"></script>
   <script>
-    let p1 = 0;
+    let ps = [0, 0, 0, 0, 0, 0];
 
     $(function () {
       // --對話框 1 OK設定--
@@ -394,6 +394,7 @@
               $("#welcome2").addClass("invisible");
               // 計分欄出現
               $("#scoreBoard").fadeIn(1000);
+              // ps1玩家首先計分，加入顏色 class，代表輪到該玩家
               $(".pName").eq(0).addClass("blue");
               $(".pScore").eq(0).addClass("red");
               // 卡片出現
@@ -418,11 +419,12 @@
                   // 一樣的話加入ok class，並讓它透明
                   $(".open").fadeTo(300, 0).addClass("ok");
                   // 答對該玩家加分
-                  // for (j = 0; j < $(".pScore").length; j++) {
-                  //   $(".pScore").eq(j).find(".red").val()++;
-                  // }
-                  p1++;
-                  $(".pScore").eq(0).text(p1);
+                  for (j = 0; j < $(".pScore").length; j++) {
+                    if ($(".pScore").eq(j).hasClass("red")) {
+                      ps[j]++;
+                      $(".pScore").eq(j).text(ps[j]);
+                    }
+                  }
                   console.log($(".pScore").eq(0).text());
 
                 }
