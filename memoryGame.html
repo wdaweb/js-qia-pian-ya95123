@@ -231,7 +231,7 @@
       <span class="tText">選擇一對相同的數字和圖像的卡片，即獲得一分!<br>且可繼續翻下一對卡片。答錯則換下一位玩家 😎</span><br>
       <span class="remark">(一個人玩也是OK的哦)</span><br id="remarkBr">
       <select id="sPlayers" class="select input">
-        <option value="">玩家人數</option>
+        <option id="resetP" value="">請選擇玩家人數</option>
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -253,9 +253,7 @@
     </tr>
   </table>
 
-  <!-- TODO  1.卡片發牌設定 2.遊戲完成時對話框(獲勝/平手/再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 3.增加動態互動感 -->
-  <!-- <span">遊戲方式：翻2張牌數字一樣及得1分，且可繼續翻牌；若不一樣，及換下一人。</span><br> -->
-
+  <!-- TODO  1.遊戲完成時對話框(獲勝/平手/再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 2.調版型、CSS(分左右) 3.增加動態互動感 -->
   <div id="game" class="invisible">
     <div id="frame"></div>
   </div>
@@ -381,7 +379,9 @@
           alert("至少選擇1人，才能開始遊戲唷 😎");
         }
         else {
-          $("#welcome2 .tText").text("");
+          $("#welcome2 .tTitle").text("🤴玩家名稱👸");
+          $("#welcome2 .tText").text("若需更改人數，請重新選擇人數，點按藍色按鈕即可");
+          $("#welcome2 .tText").css({ "font-size": "2.2vmin" });
           $("#welcome2 .remark").remove();
           $("#remarkBr").remove();
           $("#next").attr("value", "更改人數");
