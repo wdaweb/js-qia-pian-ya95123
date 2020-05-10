@@ -159,7 +159,6 @@
 
       font-size: 2.7vmin;
       text-align: center;
-      /* transition: 0.3s; */
     }
 
     #scoreBoard td {
@@ -275,15 +274,14 @@
     </div>
   </div>
 
-  <!-- 3-1.(單人)遊戲結束時對話框 -->
+  <!-- 3-1.(單人)遊戲結束時對話框 條件：1個人 &&  -->
   <div id="end1" class="end invisible">
     <div class="content">
       <p class="tTitle">恭喜你完成了</p>
-      <!-- TODO　放恭喜圖片 -->
+      <!-- TODO　放恭喜圖片(隨機) -->
       <div class="comPicsFrame">
         <lottie-player class="comPics" src="https://assets10.lottiefiles.com/packages/lf20_5JFpAw.json"
-          background="transparent" speed="1" loop autoplay>
-        </lottie-player>
+          background="transparent" speed="1" loop autoplay></lottie-player>
       </div>
       <span class="remark">要再來一場嗎？</span><br>
       <!-- TODO 直接重新整理 -->
@@ -295,7 +293,7 @@
   </div>
 
   <!-- 3-2.(2人以上)遊戲結束時對話框 -->
-  <div id="end1" class="talk invisible">
+  <div id="end2" class="talk invisible">
     <div class="content">
       <!-- TODO 勝者css設定 -->
       <p class="tTitle">Winner is <span id="winner"></span></p>
@@ -331,6 +329,7 @@
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script src="./jquery-3.5.0.min.js"></script>
   <script>
+    const end = new Audio("./music/yay.mp3")
     let ps = [0, 0, 0, 0, 0, 0];
 
     $(function () {
@@ -436,6 +435,11 @@
                 }
 
               }
+            }
+            // 完成遊戲條件、觸發內容
+            if ($(".ok").length == $(".card").length) {
+              $("#end1").removeClass("invisible");
+              end.play();
             }
           })
 
