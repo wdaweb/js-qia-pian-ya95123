@@ -51,7 +51,22 @@
         }
 
         /* TODO　完成對話框：圓形、大一點 */
-        .end {}
+        .end {
+            width: 55vmin;
+            height: 45vmin;
+            background: #fff;
+            border-radius: 1vmin;
+            box-shadow: 0 0 2vmin #aaa;
+            text-align: center;
+
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            position: relative;
+            transition: 0.3s;
+        }
 
         /* 內容置中 */
         .content {
@@ -124,19 +139,19 @@
         .comPicsFrame {
             display: flex;
             justify-content: center;
-            border: 1px solid #000;
+            /* border: 1px solid #000; */
         }
 
         /* 恭喜圖片 */
         .comPics {
-            width: 70%;
+            width: 80%;
         }
     </style>
 </head>
 
 <body>
     <!-- 3-1.(單人)遊戲結束時對話框 -->
-    <div id="end1" class="talk">
+    <div id="end1" class="end">
         <div class="content">
             <p class="tTitle">恭喜你完成了</p>
             <!-- TODO　放恭喜圖片 -->
@@ -150,7 +165,7 @@
             <input id="reset" class="confirm" type="button" value="Reset">
             <!-- TODO 名稱保留，牌數一樣 -->
             <input id="again" class="confirm" type="button" value="Again"
-                style="background:rgb(241, 58, 58);margin-left:10%">
+                style="background:rgb(241, 58, 58);margin-left:10%;margin-top: 3%;">
         </div>
     </div>
 
