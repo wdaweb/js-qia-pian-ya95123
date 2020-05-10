@@ -2,81 +2,482 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy memory time</title>
-    <style>
-        * {
-            padding: 0px;
-            margin: 0px;
-            /* font-size: 0px; */
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>記憶撲克</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      /* list-style: none; */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, '微軟正黑體';
+    }
 
-        #game {
-            width: 75vw;
-            height: 80vh;
-            background: rgb(19, 95, 0);
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
+    html,
+    body {
+      /* width: 100vw; */
+      height: 100vh;
+    }
 
-        .card {
-            width: 14vw;
-            height: 15vh;
-            margin: 1vh 0 0 1vw;
-            float: left;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateY(180deg);
-            transition: transform .3s;
-        }
+    body {
+      /* background-color: #000; */
+    }
 
-        .front {
-            width: 100%;
-            height: 100%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            position: absolute;
+    .blue {
+      color: rgb(37, 37, 223);
+      font-weight: 550;
+    }
 
-        }
+    .red {
+      color: rgb(248, 36, 36);
+    }
 
-        .back {
-            width: 100%;
-            height: 100%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-image: url(/images/Red_back.jpg);
-            position: absolute;
-            transform: rotateY(180deg);
-            backface-visibility: hidden;
-        }
-    </style>
+    /* --對話框 class 設定-- */
+    .talk {
+      width: 60vmin;
+      height: 35vmin;
+      background: #fff;
+      border-radius: 1vmin;
+      box-shadow: 0 0 2vmin #aaa;
+      text-align: center;
+
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      position: relative;
+      transition: 0.3s;
+    }
+
+    /* 內容置中 */
+    .content {
+      width: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* 確認鍵 */
+    .confirm {
+      width: 20%;
+      padding: 1.5% 0;
+      border: 0px;
+      border-radius: 1vmin;
+      background: rgb(82, 85, 252);
+      box-shadow: 0vmin 0vmin 0.8vmin #ccc;
+
+      font-size: 2.7vmin;
+      font-weight: 550;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* 標題設定 */
+    .tTitle {
+      font-size: 4vmin;
+      font-weight: 550;
+      margin-bottom: 1.5vmin;
+    }
+
+    /* 內文設定 */
+    .tText {
+      font-size: 2.4vmin;
+    }
+
+    /* 備註 */
+    .remark {
+      color: #999;
+      font-size: 2.2vmin;
+    }
+
+    /* select */
+    .select {
+      margin: 2.5vmin;
+      font-size: 2.2vmin;
+    }
+
+    /* 消失 */
+    .invisible {
+      display: none;
+    }
+
+    /* input 邊框圓化 */
+    .input {
+      border-radius: 1vmin;
+    }
+
+    /* 輸入名稱 input框 */
+    .playersName {
+      width: 35%;
+      margin-left: 1%;
+      margin-top: 1%;
+      border: 0.1vmin solid #999;
+      font-size: 2.4vmin;
+    }
+
+    /* 記分板 */
+    #scoreBoard {
+      width: 14%;
+      /* height: 10%; */
+      border: 0.2vmin solid #000;
+      border-radius: 1vmin;
+      position: absolute;
+      left: 2%;
+      top: 6.5%;
+
+      font-size: 2.7vmin;
+      text-align: center;
+      /* transition: 0.3s; */
+    }
+
+    #scoreBoard td {
+      padding: 1vmin;
+    }
+
+    /* --卡片設置-- */
+    #game {
+      width: 60%;
+      /* height: auto; */
+      /* background: rgb(190, 250, 255); */
+
+      position: absolute;
+      left: 50%;
+      top: 5%;
+      transform: translate(-50%, 0%);
+      /* margin-bottom: 3%; */
+
+      /* display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around; */
+    }
+
+    .card {
+      width: 10%;
+      height: 15vmin;
+      margin: 1.25%;
+      float: left;
+      /* 設定子元素在3D空間內(要記得設定為點，子元素absolute) */
+      transform-style: preserve-3d;
+      /* 先把圖片翻到背面 */
+      transform: rotateY(180deg);
+      /* 設為定位點 */
+      position: relative;
+      /* 改變時的秒數=>(指定(transform變動),秒數) */
+      transition: transform 0.3s;
+    }
+
+    /* 先不用放卡片 */
+    .front {
+      width: 100%;
+      height: 100%;
+      /* background: #ffffaa; */
+      /* border: 1px solid #000; */
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      position: absolute;
+
+    }
+
+    /* 要先放卡片 */
+    .back {
+      width: 100%;
+      height: 100%;
+      /* 用background-image 會比 單寫background還好唷 */
+      background-image: url(./images/Red_back.jpg);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      /* border: 1px solid #000; */
+      position: absolute;
+      /* 設定為背面 */
+      transform: rotateY(180deg);
+      /* 為了讓淡出時不會再回到沒數字那面淡出 */
+      backface-visibility: hidden;
+    }
+
+    /* 把卡片打開(轉正面) */
+    .open {
+      transform: rotateY(0deg);
+    }
+  </style>
 </head>
 
 <body>
-    <div id="game"></div>
+  <!-- 1.歡迎對話框 -->
+  <div id="welcome1" class="talk">
+    <div class="content">
+      <p class="tTitle">記憶 Up Up Up ✨</p>
+      <span class="tText">歡迎來到，簡單動腦時間 ~<br>大朋友小朋友，還是老朋友，讓我們來提升記憶吧！</span><br>
+      <select id="sNum" class="select input">
+        <option value="">選一個想玩的總牌數</option>
+        <option value="8">8</option>
+        <option value="16">16</option>
+        <option value="26">26</option>
+        <option value="34">34</option>
+        <option value="42">42</option>
+        <option value="52">52</option>
+      </select><br>
+      <input id="welOK" class="confirm" type="button" value="OK">
+    </div>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script>
-        $(function () {
-            // 產生的卡片數量
-            for (let i = 1; i <= 20; i++) {
-                $("#game").append(`
-                <div class="card">
-                    <div class="front"></div>
-                    <div class="back"></div>
+  <!-- 2.遊戲方式及人數對話框 -->
+  <div id="welcome2" class="talk invisible">
+    <div class="content">
+      <p class="tTitle">🃏 遊戲規則 🃏</p>
+      <span class="tText">選擇一對相同的數字和圖像的卡片，即獲得一分!<br>且可繼續翻下一對卡片。答錯則換下一位玩家 😎</span><br>
+      <span class="remark">(一個人玩也是OK的哦)</span><br id="remarkBr">
+      <select id="sPlayers" class="select input">
+        <option id="resetP" value="">請選擇玩家人數</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select><br>
+      <input id="next" class="confirm" type="button" value="Next">
+      <input id="go" class="confirm invisible" type="button" value="Go"
+        style="background:rgb(241, 58, 58);margin-left:10%">
+    </div>
+  </div>
+
+  <!-- 3-1.(單人)遊戲結束時對話框 -->
+  <div id="end1" class="talk invisible">
+    <div class="content">
+      <p class="tTitle">恭喜你完成了</p>
+      <!-- TODO　放恭喜圖片 -->
+      <div class="comPics"></div>
+      <span class="remark">要再來一場嗎？</span><br>
+      <!-- TODO 直接重新整理 -->
+      <input id="reset" class="confirm" type="button" value="Reset">
+      <!-- TODO 名稱保留，牌數一樣 -->
+      <input id="again" class="confirm" type="button" value="Again" style="background:rgb(241, 58, 58);margin-left:10%">
+    </div>
+  </div>
+
+  <!-- 3-2.(2人以上)遊戲結束時對話框 -->
+  <div id="end1" class="talk invisible">
+    <div class="content">
+      <!-- TODO 勝者css設定 -->
+      <p class="tTitle">Winner is <span id="winner"></span></p>
+      <!-- TODO　放恭喜圖片 -->
+      <div class="comPics"></div>
+      <span class="remark">要再來一場嗎？</span><br>
+      <!-- TODO 直接重新整理 -->
+      <input id="reset" class="confirm" type="button" value="Reset">
+      <!-- TODO 名稱保留，牌數一樣 -->
+      <input id="again" class="confirm" type="button" value="Again" style="background:rgb(241, 58, 58);margin-left:10%">
+    </div>
+  </div>
+
+  <!-- 4.記分板 -->
+  <table id="scoreBoard" class="invisible" cellspacing="0">
+    <tr>
+      <td>Name</td>
+      <td>Score</td>
+    </tr>
+  </table>
+
+
+  <!-- TODO  1.遊戲完成時對話框"寫在點擊事件那裏"(獲勝/平手/再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 2.調版型、CSS(分左右) 3.增加動態互動感 -->
+  <div id="game" class="invisible">
+    <div id="frame"></div>
+  </div>
+
+  <!-- 狗狗動態圖 -->
+  <!-- <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_5JFpAw.json" background="transparent" speed="1"
+    style="width: 300px; height: 300px;" loop autoplay></lottie-player> -->
+
+  <!-- 動態圖連結 -->
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="./jquery-3.5.0.min.js"></script>
+  <script>
+    let ps = [0, 0, 0, 0, 0, 0];
+
+    $(function () {
+      // --對話框 1 OK設定--
+      // 點選 OK 鍵，抓取 select 值，對話框消失，並跳下一對話框(玩家人數與名稱)
+      $("#welOK").click(function () {
+        if ($("#sNum").val() == "") {
+          alert("要選擇卡牌數，才能進行遊戲唷 😎");
+        }
+        else {
+          $("#welcome1").addClass("invisible");
+          $("#welcome2").removeClass("invisible");
+
+          // --製造卡牌--
+          // sNum 等於在 select裡被選到的值  
+          const sNum = parseInt($("#sNum").val());
+          console.log(`選擇：${sNum} 張牌`);
+          // 生出該場總卡片數的 card
+          for (let i = 1; i <= sNum; i++) {
+            $("#game").append(`<div class="card">
+                <div class="front"></div>
+                <div class="back"></div>
                 </div>
-                `)
+                `);
+          }
+          // 用if區分 26張以下 和 26張-52張之間
+          // 設定正面圖，並隨機打散，因為上面是class，所以i從0開始才可以搭配
+          // 因為兩兩一組，所以最大數，為總數的一半，所以讓迴圈跑兩圈
+          if (sNum <= 26 && sNum > 0) {
+            for (let i = 0; i < ($(".card").length); i++) {
+              // i / (總數/2) + 1 = 會讓 num 重複一遍 .card 就會產生一對的牌組
+              let num = i % ($(".card").length / 2) + 1;
+              $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num}S.jpg)`);
+              // 放入資料標籤，以利檢查測試 data- 預設可以存資料
+              $(".card").eq(i).attr("data-card", num);
+
+              // 打亂(用無條件捨去，因為卡片長度假設為16，可是class陣列只有15)
+              let targat = Math.floor(Math.random() * $(".card").length);
+              // 隨選一張，放i順序放入i後面=>最後就會把亂所有牌了
+              $(".card").eq(targat).insertAfter($(".card").eq(i));
+            }
+          }
+          else if (sNum <= 52 && sNum > 26) {
+            for (let i = 0; i < 26; i++) {
+              let num1 = i % (26 / 2) + 1;
+              $(".card").eq(i).find(".front").css("background-image", `url(./images/num/${num1}S.jpg)`);
+              $(".card").eq(i).attr("data-card", `${num1}S`);
+            }
+            for (let j = 0; j < (sNum - 26); j++) {
+              let num2 = j % ((sNum - 26) / 2) + 1;
+              $(".card").eq(j + 26).find(".front").css("background-image", `url(./images/num/${num2}H.jpg)`);
+              $(".card").eq(j + 26).attr("data-card", `${num2}H`);
+            }
+            for (let k = 0; k < sNum; k++) {
+              let targat = Math.floor(Math.random() * sNum);
+              $(".card").eq(targat).insertAfter($(".card").eq(k));
+            }
+          }
+
+          // 點擊卡片事件 open(設為打開事件) ok(代表已完成)
+          $(".card").on('click', function () {
+            // 如果open數量小於二，且點的那張沒有過open，可以打開(加入open)
+            if ($(".open").length < 2 && !$(this).hasClass("open")) {
+              $(this).addClass("open");
+            }
+            // 已經打開兩張卡片的時候
+            if ($(".open").length == 2) {
+              // 讓圖片翻翻回(不相等就回直接翻回)
+              setTimeout(() => {
+                $(".open").removeClass("open");
+              }, 300);
+
+              // 換一位玩家玩(刪掉上一玩家class 加入到下一個玩家)
+              if ($(".open").eq(0).find(".front").css("background-image") !== $(".open").eq(1).find(".front").css("background-image")) {
+                for (i = 0; i < $(".pScore").length; i++) {
+                  if ($(".pScore").eq(i).hasClass("red") && i < ($(".pScore").length - 1)) {
+                    $(".pName").eq(i).removeClass("blue");
+                    $(".pScore").eq(i).removeClass("red");
+                    $(".pName").eq(i + 1).addClass("blue");
+                    $(".pScore").eq(i + 1).addClass("red");
+                    break;
+                    console.log($(".pScore").eq(i + 1).hasClass("red"));
+                  }
+                  // 最後一位玩家，跳到第一個玩家
+                  else if ($(".pScore").eq(i).hasClass("red") && i == ($(".pScore").length - 1)) {
+                    $(".pName").eq(i).removeClass("blue");
+                    $(".pScore").eq(i).removeClass("red");
+                    $(".pName").eq(0).addClass("blue");
+                    $(".pScore").eq(0).addClass("red");
+                  }
+                }
+              }
+              // 圖片一樣時(open.eq(0)跟open.eq(1)一樣)
+              else if ($(".open").eq(0).find(".front").css("background-image") == $(".open").eq(1).find(".front").css("background-image")) {
+                // 一樣的話加入ok class，並讓它透明
+                $(".open").fadeTo(300, 0).addClass("ok");
+                // 答對該玩家加分
+                for (j = 0; j < $(".pScore").length; j++) {
+                  if ($(".pScore").eq(j).hasClass("red")) {
+                    ps[j]++;
+                    $(".pScore").eq(j).text(ps[j]);
+                  }
+                }
+
+              }
+            }
+          })
+
+
+        }
+
+      })
+
+      // --對話框 2 players Next設定--
+      $("#next").click(function () {
+        if ($("#sPlayers").val() == "") {
+          alert("至少選擇1人，才能開始遊戲唷 😎");
+        }
+        else {
+          $("#welcome2 .tTitle").text("🤴玩家名稱👸");
+          $("#welcome2 .tText").text("若需更改人數，請重新選擇人數，點按藍色按鈕即可");
+          $("#welcome2 .tText").css({ "font-size": "2.2vmin" });
+          $("#welcome2 .remark").remove();
+          $("#remarkBr").remove();
+          $("#next").attr("value", "更改人數");
+          $("#go").removeClass("invisible");
+
+          for (let i = 0; i < $("#sPlayers").val(); i++) {
+            // 玩家輸入名稱 input
+            $("#welcome2 .tText").append(`<input class="playersName input" type="text" size="20" placeholder="玩家${i + 1} 名稱">`);
+          }
+          console.log(`選擇：${$("#sPlayers").val()} 人`);
+        }
+
+      })
+
+      // --對話框 2 players Go設定--
+      $("#go").click(function () {
+        // 都有輸入名字才可以往下進行
+        for (let i = 0; i < $("#sPlayers").val(); i++) {
+          if ($(".playersName").eq(i).val() == '') {
+            alert(`每個玩家都需要輸入名字才可以玩哦🙆‍♂`);
+            // 如果前面有被輸入到append，要清除掉
+            $(".pName").remove();
+            $(".pScore").remove();
+            break;
+          }
+          else {
+            // 把玩家名稱放入計分欄
+            $("#scoreBoard").append(`
+              <tr>
+              <td class="pName">${$(".playersName").eq(i).val()}</td>
+              <td class="pScore">0</td>
+              </tr>
+              `);
+            console.log(`玩家 ${i + 1}：${$(".playersName").eq(i).val()}`);
+            // 上面跑完且有輸入名字按GO，才有用
+            if (i == ($("#sPlayers").val()) - 1) {
+              // 讓對話框消失
+              $("#welcome2").addClass("invisible");
+              // 計分欄出現
+              $("#scoreBoard").fadeIn(1000);
+              // ps1玩家首先計分，加入顏色 class，代表輪到該玩家
+              $(".pName").eq(0).addClass("blue");
+              $(".pScore").eq(0).addClass("red");
+              // 卡片出現
+              $("#game").fadeIn(1000);
             }
 
-            // for ()
-        })
-    </script>
+
+          }
+        }
+
+      })
+
+
+
+
+
+    })
+
+  </script>
 </body>
 
 </html>
