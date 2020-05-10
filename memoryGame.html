@@ -245,7 +245,36 @@
     </div>
   </div>
 
-  <!-- 3.記分板 -->
+  <!-- 3-1.(單人)遊戲結束時對話框 -->
+  <div id="end1" class="talk invisible">
+    <div class="content">
+      <p class="tTitle">恭喜你完成了</p>
+      <!-- TODO　放恭喜圖片 -->
+      <div class="comPics"></div>
+      <span class="remark">要再來一場嗎？</span><br>
+      <!-- TODO 直接重新整理 -->
+      <input id="reset" class="confirm" type="button" value="Reset">
+      <!-- TODO 名稱保留，牌數一樣 -->
+      <input id="again" class="confirm" type="button" value="Again" style="background:rgb(241, 58, 58);margin-left:10%">
+    </div>
+  </div>
+
+  <!-- 3-2.(2人以上)遊戲結束時對話框 -->
+  <div id="end1" class="talk invisible">
+    <div class="content">
+      <!-- TODO 勝者css設定 -->
+      <p class="tTitle">Winner is <span id="winner"></span></p>
+      <!-- TODO　放恭喜圖片 -->
+      <div class="comPics"></div>
+      <span class="remark">要再來一場嗎？</span><br>
+      <!-- TODO 直接重新整理 -->
+      <input id="reset" class="confirm" type="button" value="Reset">
+      <!-- TODO 名稱保留，牌數一樣 -->
+      <input id="again" class="confirm" type="button" value="Again" style="background:rgb(241, 58, 58);margin-left:10%">
+    </div>
+  </div>
+
+  <!-- 4.記分板 -->
   <table id="scoreBoard" class="invisible" cellspacing="0">
     <tr>
       <td>Name</td>
@@ -253,11 +282,17 @@
     </tr>
   </table>
 
+
   <!-- TODO  1.遊戲完成時對話框"寫在點擊事件那裏"(獲勝/平手/再玩一次(玩家一樣嗎/重新輸入玩家)、不玩)、完成小獎勵、祝福的話 2.調版型、CSS(分左右) 3.增加動態互動感 -->
   <div id="game" class="invisible">
     <div id="frame"></div>
   </div>
 
+  <!-- 狗狗動態圖 -->
+  <!-- <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_5JFpAw.json" background="transparent" speed="1"
+    style="width: 300px; height: 300px;" loop autoplay></lottie-player> -->
+
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script src="./jquery-3.5.0.min.js"></script>
   <script>
     let ps = [0, 0, 0, 0, 0, 0];
