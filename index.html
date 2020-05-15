@@ -354,7 +354,7 @@
   <div id="end2" class="endPs invisible">
     <div class="content">
       <!-- TODO 勝者css設定 -->
-      <p class="tTitle">Winner is <span id="winner"></span></p>
+      <p class="tTitle">Winner is <span id="winner" class="red"></span></p>
       <!-- TODO　放恭喜圖片 -->
       <div class="comPicsFrame">
         <lottie-player class="comPics2" src="https://assets1.lottiefiles.com/private_files/lf30_4uTjNk.json"
@@ -401,6 +401,7 @@
     const end = new Audio("./music/yay.mp3");
     end.volume = 0.5;
     let ps = [0, 0, 0, 0, 0, 0];
+    let winnerS = 0;
 
     $(function () {
       // --對話框 1 OK設定--
@@ -507,20 +508,29 @@
               }
             }
             // 完成遊戲條件、觸發內容
-            // TODO --對話框 end1 
+            // TODO --對話框 end
             if ($(".ok").length == $(".card").length) {
+              // 1人玩
               if ($("#sPlayers").val() == 1) {
-                $("#end1").fadeIn("500");
+                $("#end1").fadeIn("300");
               }
+              // 2人以上
               else {
-                $("#end2").fadeIn("500");
+                $("#end2").fadeIn("300");
+                for (let i = 0; i < $("#sPlayers").val(); i++) {
+                  if (ps[i] > winnerS) {
+                    $("#winner").text(`${$(".playersName").eq(i).val()}`)
+                    winnerS = ps[i];
+                    // TODO 平手可能
+                  }
+                }
               }
+              console.log($("#winner").text());
               // 音效
               end.play();
               // Yes 鍵
               $(".yes").click(function () {
                 location.reload();
-                $(".tTitle").text("123")
               })
               // Rest 鍵
               $(".rest").click(function () {
