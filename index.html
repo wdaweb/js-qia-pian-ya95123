@@ -103,6 +103,10 @@
       display: none;
     }
 
+    .invisibleF {
+      display: none !important;
+    }
+
     /* input 邊框圓化 */
     .input {
       border-radius: 1vmin;
@@ -135,6 +139,20 @@
       transition: 0.3s;
     }
 
+    .endPs {
+      width: 55vmin;
+      height: auto;
+      text-align: center;
+
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      position: relative;
+      transition: 0.3s;
+    }
+
     /* 恭喜圖片 div */
     .comPicsFrame {
       display: flex;
@@ -145,6 +163,46 @@
     /* 恭喜圖片 */
     .comPics {
       width: 80%;
+    }
+
+    .comPics2 {
+      width: 100%;
+      height: 100%;
+      /* box-shadow: 0 0 2vmin #ff9; */
+      /* height: 300px;  */
+      /* position: absolute; 
+      z-index: -1; */
+    }
+
+    /* yes鍵 */
+    .yes {
+      margin-left: 10%;
+      margin-top: 3%;
+    }
+
+    /* 休息圖邊框 */
+    .restPicF {
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(173, 228, 205);
+      position: absolute;
+      z-index: 2;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 休息圖 */
+    .restPic {
+      width: 45vmin;
+      height: 45vmin;
+      transition: filter 0.9s;
+    }
+
+    .restPic:hover {
+      cursor: pointer;
+      filter: drop-shadow(0rem 0rem 0.3rem #ffa);
     }
 
     /* 記分板 */
@@ -285,26 +343,37 @@
       </div>
       <span class="remark">要再來一場嗎？</span><br>
       <!-- TODO 直接重新整理 -->
-      <input id="reset" class="confirm" type="button" value="Reset">
+      <input id="rest1" class="confirm rest" type="button" value="Rest">
       <!-- TODO 名稱保留，牌數一樣 -->
-      <input id="yes" class="confirm" type="button" value="Yes"
+      <input id="yes1" class="confirm yes" type="button" value="Yes"
         style="background:rgb(241, 58, 58);margin-left:10%;margin-top: 3%;">
     </div>
   </div>
 
   <!-- 3-2.(2人以上)遊戲結束時對話框 -->
-  <div id="end2" class="talk invisible">
+  <div id="end2" class="endPs invisible">
     <div class="content">
       <!-- TODO 勝者css設定 -->
       <p class="tTitle">Winner is <span id="winner"></span></p>
       <!-- TODO　放恭喜圖片 -->
-      <div class="comPics"></div>
+      <div class="comPicsFrame">
+        <lottie-player class="comPics2" src="https://assets1.lottiefiles.com/private_files/lf30_4uTjNk.json"
+          background="transparent" speed="1" loop autoplay>
+        </lottie-player>
+      </div>
       <span class="remark">要再來一場嗎？</span><br>
       <!-- TODO 直接重新整理 -->
-      <input id="reset" class="confirm" type="button" value="Rest">
+      <input id="rest2" class="confirm rest" type="button" value="Rest">
       <!-- TODO 名稱保留，牌數一樣 -->
-      <input id="again" class="confirm" type="button" value="Again" style="background:rgb(241, 58, 58);margin-left:10%">
+      <input id="yes2" class="confirm yes" type="button" value="Yes"
+        style="background:rgb(241, 58, 58);margin-left:10%">
     </div>
+  </div>
+
+  <!-- 休息畫面 -->
+  <div class="restPicF invisibleF">
+    <lottie-player id="restPic" class="restPic" src="https://assets10.lottiefiles.com/packages/lf20_sxCwLo.json"
+      background="transparent" speed="1" loop autoplay>
   </div>
 
   <!-- 4.記分板 -->
@@ -329,7 +398,8 @@
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script src="./jquery-3.5.0.min.js"></script>
   <script>
-    const end = new Audio("./music/yay.mp3")
+    const end = new Audio("./music/yay.mp3");
+    end.volume = 0.5;
     let ps = [0, 0, 0, 0, 0, 0];
 
     $(function () {
@@ -437,9 +507,26 @@
               }
             }
             // 完成遊戲條件、觸發內容
+            // TODO --對話框 end1 
             if ($(".ok").length == $(".card").length) {
-              $("#end1").removeClass("invisible");
+              if ($("#sPlayers").val() == 1) {
+                $("#end1").fadeIn("500");
+              }
+              else {
+                $("#end2").fadeIn("500");
+              }
+              // 音效
               end.play();
+              // Yes 鍵
+              $(".yes").click(function () {
+                location.reload();
+                $(".tTitle").text("123")
+              })
+              // Rest 鍵
+              $(".rest").click(function () {
+                $(".end").addClass("invisible")
+                $(".restPicF").removeClass("invisibleF")
+              })
             }
           })
 
