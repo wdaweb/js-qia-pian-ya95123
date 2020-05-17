@@ -32,6 +32,11 @@
       color: rgb(248, 36, 36);
     }
 
+    .weight {
+      font-weight: bold;
+      font-size: 5.3vmin;
+    }
+
     /* --對話框 class 設定-- */
     .talk {
       width: 60vmin;
@@ -289,6 +294,11 @@
     .open {
       transform: rotateY(0deg);
     }
+
+    /* 成功消失卡牌的不能被點擊 */
+    .ok {
+      pointer-events: none;
+    }
   </style>
 </head>
 
@@ -354,7 +364,9 @@
   <div id="end2" class="endPs invisible">
     <div class="content">
       <!-- 勝者 -->
-      <p class="tTitle">Winner is <span id="winner" class="red"></span></p>
+      <p id="winner1" class="tTitle">Winner is <span id="winnerN1" class="red weight"></span> 💪</p>
+      <!-- 平手 -->
+      <p id="winner2" class="tTitle"><span id="winnerN2" class="blue weight"></span> 平手！😎</p>
       <!-- 恭喜圖片 -->
       <div class="comPicsFrame">
         <lottie-player class="comPics2" src="https://assets1.lottiefiles.com/private_files/lf30_4uTjNk.json"
@@ -401,6 +413,7 @@
     const end = new Audio("./music/yay.mp3");
     end.volume = 0.5;
     let ps = [0, 0, 0, 0, 0, 0];
+    let winnerN = '';
     let winnerS = 0;
 
     $(function () {
@@ -518,10 +531,20 @@
               else {
                 $("#end2").fadeIn("300");
                 for (let i = 0; i < $("#sPlayers").val(); i++) {
+                  // 1人獲勝
                   if (ps[i] > winnerS) {
-                    $("#winner").text(`${$(".playersName").eq(i).val()}`)
                     winnerS = ps[i];
-                    // TODO 平手可能
+                    winnerN = $(".playersName").eq(i).val()
+                    $("#winnerN1").text(winnerN);
+                    $("#winner1").removeClass("invisible");
+                    $("#winner2").addClass("invisible");
+                  }
+                  // 平手
+                  else if (ps[i] == winnerS) {
+                    winnerN += `、${$(".playersName").eq(i).val()}`;
+                    $("#winnerN2").text(winnerN);
+                    $("#winner1").addClass("invisible");
+                    $("#winner2").removeClass("invisible");
                   }
                 }
               }
@@ -561,7 +584,7 @@
 
           for (let i = 0; i < $("#sPlayers").val(); i++) {
             // 玩家輸入名稱 input
-            $("#welcome2 .tText").append(`<input class="playersName input" type="text" size="20" placeholder="玩家${i + 1} 名稱">`);
+            $("#welcome2 .tText").append(`<input class= "playersName input" type = "text" size = "20" placeholder = "玩家${i + 1} 名稱">`);
           }
           console.log(`選擇：${$("#sPlayers").val()} 人`);
         }
@@ -582,12 +605,12 @@
           else {
             // 把玩家名稱放入計分欄
             $("#scoreBoard").append(`
-              <tr>
-              <td class="pName">${$(".playersName").eq(i).val()}</td>
-              <td class="pScore">0</td>
-              </tr>
-              `);
-            console.log(`玩家 ${i + 1}：${$(".playersName").eq(i).val()}`);
+                    <tr tr >
+                    <td class="pName">${$(".playersName").eq(i).val()}</td>
+                    <td class="pScore">0</td>
+              </tr >
+                      `);
+            console.log(`玩家 ${i + 1} ：${$(".playersName").eq(i).val()}`);
             // 上面跑完且有輸入名字按GO，才有用
             if (i == ($("#sPlayers").val()) - 1) {
               // 讓對話框消失
