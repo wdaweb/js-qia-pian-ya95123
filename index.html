@@ -531,7 +531,6 @@
               }
             }
             // 完成遊戲條件、觸發內容
-            // TODO --對話框 end (剩下平手狀態)
             if ($(".ok").length == $(".card").length) {
               // 1人玩
               if ($("#sPlayers").val() == 1) {
@@ -594,7 +593,7 @@
 
           for (let i = 0; i < $("#sPlayers").val(); i++) {
             // 玩家輸入名稱 input
-            $("#welcome2 .tText").append(`<input class= "playersName input" type = "text" size = "20" placeholder = "玩家${i + 1} 名稱">`);
+            $("#welcome2 .tText").append(`<input class= "playersName input" type = "text" size = "20" maxlength="10" placeholder = "玩家${i + 1} 名稱">`);
           }
           console.log(`選擇：${$("#sPlayers").val()} 人`);
         }
