@@ -221,7 +221,7 @@
       /* height: 10%; */
       border: 0.35vmin solid #ADBCFF;
       border-radius: 1vmin;
-      position: absolute;
+      position: fixed;
       left: 2%;
       top: 6.5%;
 
@@ -551,6 +551,7 @@
             }
             // 完成遊戲條件、觸發內容
             if ($(".ok").length == $(".card").length) {
+              $(".card").addClass("invisible")
               // 1人玩
               if ($("#sPlayers").val() == 1) {
                 $("#end1").fadeIn("300");
