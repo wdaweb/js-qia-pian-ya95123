@@ -1,0 +1,314 @@
+* {
+  margin: 0;
+  padding: 0;
+  /* list-style: none; */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, '微軟正黑體';
+}
+
+html,
+body {
+  /* width: 100vw; */
+  height: 100vh;
+}
+
+body {
+  /* background-color: #000; */
+  background: url(../images/bg.svg);
+  background-position: center;
+}
+
+.blue {
+  color: rgb(37, 37, 223);
+  font-weight: 650;
+}
+
+.red {
+  color: rgb(248, 36, 36);
+  font-weight: 650;
+}
+
+.weight {
+  font-weight: bold;
+  font-size: 5.3vmin;
+}
+
+/* --對話框 class 設定-- */
+.talk {
+  width: 60vmin;
+  height: 35vmin;
+  background: #fff;
+  border-radius: 1vmin;
+  box-shadow: 0 0 2vmin #aaa;
+  text-align: center;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* 內容置中 */
+.content {
+  width: 100%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 確認鍵 */
+.confirm {
+  width: 20%;
+  padding: 1.5% 0;
+  border: 0px;
+  border-radius: 1vmin;
+  background: rgb(82, 85, 252);
+  box-shadow: 0vmin 0vmin 0.4vmin #ccc;
+
+  font-size: 2.7vmin;
+  font-weight: 550;
+  color: white;
+  cursor: pointer;
+}
+
+/* 標題設定 */
+.tTitle {
+  font-size: 4vmin;
+  font-weight: 550;
+  margin-bottom: 1.5vmin;
+}
+
+/* 內文設定 */
+.tText {
+  font-size: 2.4vmin;
+}
+
+/* 備註 */
+.remark {
+  color: #999;
+  font-size: 2.2vmin;
+}
+
+/* select */
+.select {
+  margin: 2.5vmin;
+  font-size: 2.2vmin;
+}
+
+/* 消失 */
+.invisible {
+  display: none;
+}
+
+.invisibleF {
+  display: none !important;
+}
+
+/* input 邊框圓化 */
+.input {
+  border-radius: 1vmin;
+}
+
+/* 輸入名稱 input框 */
+.playersName {
+  width: 35%;
+  margin-left: 1%;
+  margin-top: 1%;
+  border: 0.1vmin solid #999;
+  font-size: 2.4vmin;
+}
+
+/* 完成對話框 */
+.end {
+  width: 55vmin;
+  height: 45vmin;
+  background: #fff;
+  border-radius: 1vmin;
+  box-shadow: 0 0 2vmin #aaa;
+  text-align: center;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  position: relative;
+  transition: 0.3s;
+}
+
+.endPs {
+  width: 55vmin;
+  height: auto;
+  text-align: center;
+
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* 恭喜圖片 div */
+.comPicsFrame {
+  display: flex;
+  justify-content: center;
+  /* border: 1px solid #000; */
+}
+
+/* 恭喜圖片 */
+.comPics {
+  width: 80%;
+}
+
+.comPics2 {
+  width: 100%;
+  height: 100%;
+  /* box-shadow: 0 0 2vmin #ff9; */
+  /* height: 300px;  */
+  /* position: absolute; 
+  z-index: -1; */
+}
+
+/* yes鍵 */
+.yes {
+  margin-left: 10%;
+  margin-top: 3%;
+}
+
+/* 休息圖邊框 */
+.restPicF {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(173, 228, 205);
+  position: absolute;
+  top: 0;
+  z-index: 2;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 休息圖 */
+.restPic {
+  width: 45vmin;
+  height: 45vmin;
+  transition: filter 0.9s;
+}
+
+.restPic:hover {
+  cursor: pointer;
+  filter: drop-shadow(0rem 0rem 0.3rem #ffa);
+}
+
+/* 記分板 */
+#scoreBoard {
+  width: 14%;
+  color: #4FCC43;
+  /* height: 10%; */
+  border: 0.35vmin solid #ADBCFF;
+  border-radius: 1vmin;
+  position: fixed;
+  left: 2%;
+  top: 6.5%;
+
+  font-size: 3vmin;
+  text-align: center;
+}
+
+#scoreBoard td {
+  padding: 1vmin;
+}
+
+#footer a {
+  text-decoration: none;
+  color: #4FCC43;
+}
+
+#footer {
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  transform: translateX(-50%);
+
+  font-size: 1.6vmin;
+  color: #666;
+}
+
+/* 卡片設置 */
+#game {
+  width: 60%;
+  /* height: auto; */
+  /* background: rgb(190, 250, 255); */
+
+  position: absolute;
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%, 0%);
+  margin-bottom: 3vmin;
+
+  /* display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; */
+}
+
+.card {
+  width: 10%;
+  height: 15vmin;
+  margin: 1.25%;
+  float: left;
+  /* 設定子元素在3D空間內(要記得設定為點，子元素absolute) */
+  transform-style: preserve-3d;
+  /* 先把圖片翻到背面 */
+  transform: rotateY(180deg);
+  /* 設為定位點 */
+  position: relative;
+  /* 改變時的秒數=>(指定(transform變動),秒數) */
+  transition: transform 0.3s;
+}
+
+/* 先不用放卡片 */
+.front {
+  width: 100%;
+  height: 100%;
+  /* background: #ffffaa; */
+  /* border: 1px solid #000; */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+
+}
+
+/* 要先放卡片 */
+.back {
+  width: 100%;
+  height: 100%;
+  /* 用background-image 會比 單寫background還好唷 */
+  background-image: url(../images/Red_back.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* border: 1px solid #000; */
+  position: absolute;
+  /* 設定為背面 */
+  transform: rotateY(180deg);
+  /* 為了讓淡出時不會再回到沒數字那面淡出 */
+  backface-visibility: hidden;
+}
+
+/* 把卡片打開(轉正面) */
+.open {
+  transform: rotateY(0deg);
+}
+
+/* 成功消失卡牌的不能被點擊 */
+.ok {
+  pointer-events: none;
+}
